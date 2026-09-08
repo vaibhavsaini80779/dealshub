@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="DealsHub India 🛍️ | Big Billion Days & Great Indian Festival Deals">
   <meta property="og:description" content="Verified festive loot deals with 60% to 90% OFF. Join our WhatsApp & Telegram channels now!">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#0b1120">
 
   <!-- Google Fonts: Outfit (Headings) + Inter (Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +48,8 @@
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #0b1120 40%, #080d19 100%);
+      background: #090e1c url('assets/diwali-bg.jpg') no-repeat center top fixed;
+      background-size: cover;
       color: #f1f5f9;
       overflow-x: hidden;
       min-height: 100vh;
@@ -56,26 +57,23 @@
     h1, h2, h3, h4, .font-heading {
       font-family: 'Outfit', sans-serif;
     }
-    /* Soft Mesh Ambient Lighting */
-    .ambient-glow-top {
-      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245, 158, 11, 0.18), transparent 70%);
+    /* Festive Ambient Glow */
+    .festive-ambient {
+      background: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.15) 0%, transparent 60%);
     }
-    .ambient-glow-mid {
-      background: radial-gradient(ellipse 60% 40% at 90% 40%, rgba(99, 102, 241, 0.12), transparent 70%);
-    }
-    /* Canva-Style Glass Cards */
+    /* Canva-Style Glass Cards with Warm Glow */
     .pro-card {
-      background: rgba(19, 29, 49, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 14px 35px -10px rgba(0, 0, 0, 0.6);
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.65);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .pro-card:hover {
-      border-color: rgba(245, 158, 11, 0.4);
+      border-color: rgba(245, 158, 11, 0.5);
       transform: translateY(-3px);
-      box-shadow: 0 20px 45px -10px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 20px 45px -10px rgba(245, 158, 11, 0.22);
     }
     /* Ticker animation */
     @keyframes marquee {
@@ -95,12 +93,12 @@
 
 <body class="flex flex-col relative antialiased selection:bg-amber-500 selection:text-black">
 
-  <!-- Ambient Glow Layers -->
-  <div class="fixed inset-0 pointer-events-none z-0 ambient-glow-top"></div>
-  <div class="fixed inset-0 pointer-events-none z-0 ambient-glow-mid"></div>
+  <!-- Soft Overlay to keep all cards & text readable over Diwali background -->
+  <div class="fixed inset-0 pointer-events-none z-0 bg-slate-950/45 backdrop-blur-[1px]"></div>
+  <div class="fixed inset-0 pointer-events-none z-0 festive-ambient"></div>
 
   <!-- 1. TOP TICKER (Festive Announcement) -->
-  <aside aria-label="Announcement Bar" class="sticky top-0 z-50 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 py-2 px-4 shadow-xl overflow-hidden font-bold text-xs md:text-sm tracking-wide border-b border-amber-300/30">
+  <aside aria-label="Announcement Bar" class="sticky top-0 z-50 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 py-2 px-4 shadow-xl overflow-hidden font-bold text-xs md:text-sm tracking-wide border-b border-amber-300/40">
     <div class="animate-marquee whitespace-nowrap flex items-center gap-8">
       <span class="flex items-center gap-2">🎉 <b>BIG BILLION DAYS & GREAT INDIAN FESTIVAL 2026:</b> Free early-access alerts on WhatsApp & Telegram!</span>
       <span class="flex items-center gap-2">🔥 <b>60% TO 90% OFF:</b> Titan & Noise Watches, Libas Kurtis, Red Tape Sneakers & Skincare BOGOs</span>
@@ -111,10 +109,10 @@
   </aside>
 
   <!-- 2. NAVBAR -->
-  <header class="relative z-20 border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md">
+  <header class="relative z-20 border-b border-slate-800/80 bg-slate-950/75 backdrop-blur-md">
     <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/25 text-black font-black text-xl">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30 text-black font-black text-xl">
           🛍️
         </div>
         <div>
@@ -122,11 +120,11 @@
             DEALS<span class="text-amber-400">HUB</span>
             <span class="text-[10px] uppercase font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full">INDIA</span>
           </span>
-          <p class="text-[11px] text-slate-400 font-medium">India's Festive Deals & Loot Engine</p>
+          <p class="text-[11px] text-amber-200/80 font-medium">India's Festive Deals & Loot Engine</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <a href="#channels" class="text-xs font-bold px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-md shadow-amber-500/20 transition flex items-center gap-1.5 active:scale-95">
+        <a href="#channels" class="text-xs font-bold px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-md shadow-amber-500/25 transition flex items-center gap-1.5 active:scale-95">
           <i data-lucide="bell-ring" class="w-3.5 h-3.5"></i> Join Channels
         </a>
       </div>
@@ -136,9 +134,9 @@
   <!-- MAIN CONTAINER -->
   <main class="flex-1 relative z-10 max-w-5xl mx-auto w-full px-4 pt-6 pb-20">
 
-    <!-- 3. GRAND FESTIVE HERO BANNER (CANVA STYLE) -->
+    <!-- 3. GRAND FESTIVE HERO BANNER -->
     <section class="mb-10">
-      <div class="pro-card rounded-3xl overflow-hidden border border-amber-500/30 relative">
+      <div class="pro-card rounded-3xl overflow-hidden border border-amber-500/40 relative">
         
         <!-- Hero Graphic Image -->
         <div class="relative w-full h-56 sm:h-72 md:h-96 overflow-hidden">
@@ -151,7 +149,7 @@
           
           <!-- Floating Badge On Banner -->
           <div class="absolute top-4 left-4 sm:top-6 sm:left-6">
-            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-400/40 text-amber-300 text-xs font-extrabold shadow-lg">
+            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-400/50 text-amber-300 text-xs font-extrabold shadow-lg">
               <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
               FESTIVAL MEGA SALE 2026
             </span>
@@ -160,39 +158,39 @@
 
         <!-- Banner Content Overlay -->
         <div class="p-6 sm:p-8 -mt-20 sm:-mt-24 relative z-10 text-center">
-          <h1 class="text-2xl sm:text-4xl md:text-5xl font-heading font-black tracking-tight text-white mb-2 leading-tight">
+          <h1 class="text-2xl sm:text-4xl md:text-5xl font-heading font-black tracking-tight text-white mb-2 leading-tight drop-shadow-lg">
             BIG BILLION DAYS & FESTIVE DEALS 🛍️
           </h1>
-          <p class="text-amber-300 font-heading font-bold text-base sm:text-xl mb-6">
+          <p class="text-amber-300 font-heading font-bold text-base sm:text-xl mb-6 drop-shadow">
             FLAT 60% TO 90% OFF • HANDPICKED LOOTS • 100% FREE ALERTS
           </p>
 
-          <!-- LIVE COUNTDOWN BOX (CANVA STYLE EMBED) -->
-          <div class="max-w-md mx-auto bg-slate-900/90 backdrop-blur-md border border-amber-500/40 rounded-2xl p-4 shadow-2xl mb-4">
+          <!-- LIVE COUNTDOWN BOX -->
+          <div class="max-w-md mx-auto bg-slate-950/90 backdrop-blur-md border border-amber-500/50 rounded-2xl p-4 shadow-2xl mb-4">
             <p class="text-xs uppercase tracking-widest font-extrabold text-amber-400 flex items-center justify-center gap-1.5 mb-3">
               <i data-lucide="clock" class="w-4 h-4"></i> SALE STARTS IN (23 SEPTEMBER 2026)
             </p>
             
             <div class="grid grid-cols-4 gap-2 text-center" id="countdown-timer">
-              <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
                 <span id="days" class="text-2xl sm:text-3xl font-heading font-black text-white block">15</span>
                 <span class="text-[10px] uppercase font-bold text-slate-400">Days</span>
               </div>
-              <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
                 <span id="hours" class="text-2xl sm:text-3xl font-heading font-black text-amber-400 block">08</span>
                 <span class="text-[10px] uppercase font-bold text-slate-400">Hours</span>
               </div>
-              <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
                 <span id="minutes" class="text-2xl sm:text-3xl font-heading font-black text-white block">45</span>
                 <span class="text-[10px] uppercase font-bold text-slate-400">Mins</span>
               </div>
-              <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-2.5">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
                 <span id="seconds" class="text-2xl sm:text-3xl font-heading font-black text-amber-400 block">30</span>
                 <span class="text-[10px] uppercase font-bold text-slate-400">Secs</span>
               </div>
             </div>
 
-            <p class="text-[11px] text-slate-300 mt-3 font-medium">
+            <p class="text-[11px] text-amber-200/90 mt-3 font-medium">
               👥 <b>25,000+ Smart Shoppers</b> already joined for early alerts!
             </p>
           </div>
@@ -204,8 +202,8 @@
     <!-- 4. SEARCH & CATEGORY FILTER TABS -->
     <section class="mb-10" id="channels">
       <div class="text-center mb-5">
-        <h2 class="text-2xl md:text-3xl font-heading font-extrabold text-white">Hamare Specialized Deals Channels 📢</h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">Apni pasand ki category chuno aur 1-click mein WhatsApp ya Telegram join karo</p>
+        <h2 class="text-2xl md:text-3xl font-heading font-extrabold text-white drop-shadow">Hamare Specialized Deals Channels 📢</h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1">Apni pasand ki category chuno aur 1-click mein WhatsApp ya Telegram join karo</p>
       </div>
 
       <!-- Search Input -->
@@ -215,7 +213,7 @@
           type="text" 
           id="channelSearch" 
           placeholder="Search brands (Titan, Noise, Kurti, Red Tape, Maybelline)..." 
-          class="w-full bg-slate-900/90 border border-slate-700 rounded-2xl py-3 pl-10 pr-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition shadow-inner"
+          class="w-full bg-slate-950/85 border border-amber-500/30 rounded-2xl py-3 pl-10 pr-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition shadow-inner backdrop-blur-md"
         />
       </div>
 
@@ -224,19 +222,19 @@
         <button onclick="filterCategory('all')" class="filter-btn active px-4 py-2 rounded-xl bg-amber-500 text-slate-950 shadow-md transition" data-category="all">
           ⭐ All Channels
         </button>
-        <button onclick="filterCategory('watches')" class="filter-btn px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-800 transition" data-category="watches">
+        <button onclick="filterCategory('watches')" class="filter-btn px-4 py-2 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-200 border border-slate-700/80 transition backdrop-blur-md" data-category="watches">
           ⌚ Watches (WristHub)
         </button>
-        <button onclick="filterCategory('boys')" class="filter-btn px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-800 transition" data-category="boys">
+        <button onclick="filterCategory('boys')" class="filter-btn px-4 py-2 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-200 border border-slate-700/80 transition backdrop-blur-md" data-category="boys">
           👔 Boys Fashion
         </button>
-        <button onclick="filterCategory('girls')" class="filter-btn px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-800 transition" data-category="girls">
+        <button onclick="filterCategory('girls')" class="filter-btn px-4 py-2 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-200 border border-slate-700/80 transition backdrop-blur-md" data-category="girls">
           👗 Girls Fashion
         </button>
-        <button onclick="filterCategory('beauty')" class="filter-btn px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-800 transition" data-category="beauty">
+        <button onclick="filterCategory('beauty')" class="filter-btn px-4 py-2 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-200 border border-slate-700/80 transition backdrop-blur-md" data-category="beauty">
           💄 Beauty & Skincare
         </button>
-        <button onclick="filterCategory('loot')" class="filter-btn px-4 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 border border-slate-800 transition" data-category="loot">
+        <button onclick="filterCategory('loot')" class="filter-btn px-4 py-2 rounded-xl bg-slate-950/80 hover:bg-slate-900 text-slate-200 border border-slate-700/80 transition backdrop-blur-md" data-category="loot">
           ⚡ 90% Mega Loot
         </button>
       </div>
@@ -246,7 +244,7 @@
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16" id="cardsContainer">
 
       <!-- CARD 1: WRISTHUB (WATCHES) -->
-      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-amber-500/20 flex flex-col justify-between" data-cat="watches" data-keywords="watches titan noise fossil smartwatch casio wristhub boAt luxury rolex timex">
+      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-amber-500/30 flex flex-col justify-between" data-cat="watches" data-keywords="watches titan noise fossil smartwatch casio wristhub boAt luxury rolex timex">
         <div>
           <!-- Poster Image Header -->
           <div class="relative h-44 sm:h-48 overflow-hidden">
@@ -270,7 +268,7 @@
             </p>
 
             <!-- Latest Drop Pill -->
-            <div class="bg-slate-950/80 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
+            <div class="bg-slate-950/90 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
               <span class="text-slate-300 flex items-center gap-1.5 truncate">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
                 <b>Latest Drop:</b> Titan Neo Chronograph at ₹1,999 (MRP ₹3,999)
@@ -292,7 +290,7 @@
       </div>
 
       <!-- CARD 2: BOYS FASHION & GYM -->
-      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-blue-500/20 flex flex-col justify-between" data-cat="boys" data-keywords="boys men fashion gym wear sneakers red tape t-shirts jeans sando joggers dnmx bewakoof">
+      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-blue-500/30 flex flex-col justify-between" data-cat="boys" data-keywords="boys men fashion gym wear sneakers red tape t-shirts jeans sando joggers dnmx bewakoof">
         <div>
           <!-- Poster Image Header -->
           <div class="relative h-44 sm:h-48 overflow-hidden">
@@ -316,7 +314,7 @@
             </p>
 
             <!-- Latest Drop Pill -->
-            <div class="bg-slate-950/80 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
+            <div class="bg-slate-950/90 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
               <span class="text-slate-300 flex items-center gap-1.5 truncate">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
                 <b>Latest Drop:</b> Red Tape Retro Sneakers at ₹1,199 (MRP ₹4,999)
@@ -338,7 +336,7 @@
       </div>
 
       <!-- CARD 3: GIRLS FASHION & LIFESTYLE -->
-      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-pink-500/20 flex flex-col justify-between" data-cat="girls" data-keywords="girls women fashion kurtis suit sets sarees libas biba nightwear western dresses clovia zivame">
+      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-pink-500/30 flex flex-col justify-between" data-cat="girls" data-keywords="girls women fashion kurtis suit sets sarees libas biba nightwear western dresses clovia zivame">
         <div>
           <!-- Poster Image Header -->
           <div class="relative h-44 sm:h-48 overflow-hidden">
@@ -362,7 +360,7 @@
             </p>
 
             <!-- Latest Drop Pill -->
-            <div class="bg-slate-950/80 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
+            <div class="bg-slate-950/90 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
               <span class="text-slate-300 flex items-center gap-1.5 truncate">
                 <span class="w-2 h-2 rounded-full bg-pink-400 shrink-0"></span>
                 <b>Latest Drop:</b> Libas Pure Cotton Anarkali Set at ₹649 (MRP ₹2,799)
@@ -384,7 +382,7 @@
       </div>
 
       <!-- CARD 4: BEAUTY & SKINCARE (GLOWHUB) -->
-      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-purple-500/20 flex flex-col justify-between" data-cat="beauty" data-keywords="beauty skincare makeup dot key minimalist maybelline sunscreen serum cosrx k-beauty">
+      <div class="pro-card rounded-3xl overflow-hidden channel-card border border-purple-500/30 flex flex-col justify-between" data-cat="beauty" data-keywords="beauty skincare makeup dot key minimalist maybelline sunscreen serum cosrx k-beauty">
         <div>
           <!-- Poster Image Header -->
           <div class="relative h-44 sm:h-48 overflow-hidden">
@@ -408,7 +406,7 @@
             </p>
 
             <!-- Latest Drop Pill -->
-            <div class="bg-slate-950/80 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
+            <div class="bg-slate-950/90 rounded-xl p-3 mb-5 border border-slate-800 flex items-center justify-between text-xs">
               <span class="text-slate-300 flex items-center gap-1.5 truncate">
                 <span class="w-2 h-2 rounded-full bg-purple-400 shrink-0"></span>
                 <b>Latest Drop:</b> Dot & Key Strawberry Sunscreen (Pack of 2 BOGO) at ₹499
@@ -434,13 +432,13 @@
     <!-- 6. DIRECT SALE STOREFRONTS -->
     <section class="mb-14">
       <div class="text-center mb-6">
-        <h2 class="text-2xl font-heading font-extrabold text-white">Direct Festive Sale Portals 🛍️</h2>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">Directly shop on major e-commerce platforms with verified bank cashback</p>
+        <h2 class="text-2xl font-heading font-extrabold text-white drop-shadow">Direct Festive Sale Portals 🛍️</h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1">Directly shop on major e-commerce platforms with verified bank cashback</p>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
         <a href="https://amazon.in" target="_blank" rel="noopener noreferrer" class="pro-card rounded-2xl p-5 text-center hover:border-amber-400/50 transition group flex flex-col items-center justify-center">
-          <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
             📦
           </div>
           <span class="font-heading font-bold text-sm text-white block">Amazon GIF</span>
@@ -448,7 +446,7 @@
         </a>
 
         <a href="https://flipkart.com" target="_blank" rel="noopener noreferrer" class="pro-card rounded-2xl p-5 text-center hover:border-blue-400/50 transition group flex flex-col items-center justify-center">
-          <div class="w-12 h-12 rounded-2xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
+          <div class="w-12 h-12 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
             🛒
           </div>
           <span class="font-heading font-bold text-sm text-white block">Flipkart BBD</span>
@@ -456,7 +454,7 @@
         </a>
 
         <a href="https://myntra.com" target="_blank" rel="noopener noreferrer" class="pro-card rounded-2xl p-5 text-center hover:border-pink-400/50 transition group flex flex-col items-center justify-center">
-          <div class="w-12 h-12 rounded-2xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
+          <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
             👗
           </div>
           <span class="font-heading font-bold text-sm text-white block">Myntra Fashion</span>
@@ -464,7 +462,7 @@
         </a>
 
         <a href="https://nykaa.com" target="_blank" rel="noopener noreferrer" class="pro-card rounded-2xl p-5 text-center hover:border-purple-400/50 transition group flex flex-col items-center justify-center">
-          <div class="w-12 h-12 rounded-2xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition">
             🌸
           </div>
           <span class="font-heading font-bold text-sm text-white block">Nykaa Beauty</span>
@@ -474,31 +472,31 @@
     </section>
 
     <!-- 7. TRUST PROMISES -->
-    <section class="pro-card rounded-3xl p-6 sm:p-8 mb-14 border border-slate-800">
+    <section class="pro-card rounded-3xl p-6 sm:p-8 mb-14 border border-slate-800/90">
       <h2 class="text-xl font-heading font-bold text-white text-center mb-6">Hamara Promise: 100% Genuine & Spam-Free 🛡️</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
         <div class="flex flex-col items-center">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-3">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-3">
             <i data-lucide="badge-check" class="w-6 h-6"></i>
           </div>
           <h3 class="font-bold text-sm text-white mb-1">Handpicked & Verified</h3>
-          <p class="text-xs text-slate-400">Har deal ko hum manual verify karte hain. Fake discounts aur bad-rating products 100% blocked hain.</p>
+          <p class="text-xs text-slate-300">Har deal ko hum manual verify karte hain. Fake discounts aur bad-rating products 100% blocked hain.</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <div class="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center mb-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-3">
             <i data-lucide="sparkles" class="w-6 h-6"></i>
           </div>
           <h3 class="font-bold text-sm text-white mb-1">100% Free Lifetime</h3>
-          <p class="text-xs text-slate-400">Channels join karne ke koi charges nahi hain. Saare flash sale alerts har user ke liye hamesha free hain.</p>
+          <p class="text-xs text-slate-300">Channels join karne ke koi charges nahi hain. Saare flash sale alerts har user ke liye hamesha free hain.</p>
         </div>
 
         <div class="flex flex-col items-center">
-          <div class="w-12 h-12 rounded-2xl bg-sky-500/15 text-sky-400 flex items-center justify-center mb-3">
+          <div class="w-12 h-12 rounded-2xl bg-sky-500/20 text-sky-400 flex items-center justify-center mb-3">
             <i data-lucide="shield-alert" class="w-6 h-6"></i>
           </div>
           <h3 class="font-bold text-sm text-white mb-1">Zero Spam Policy</h3>
-          <p class="text-xs text-slate-400">Din mein sirf 6 se 8 best quality deals post hoti hain taaki aapka notification feed disturb na ho.</p>
+          <p class="text-xs text-slate-300">Din mein sirf 6 se 8 best quality deals post hoti hain taaki aapka notification feed disturb na ho.</p>
         </div>
       </div>
     </section>
@@ -506,23 +504,23 @@
   </main>
 
   <!-- 8. COMPLIANCE & LEGAL FOOTER -->
-  <footer class="relative z-10 border-t border-slate-800 bg-slate-950/90 py-8 px-4 text-center text-xs text-slate-500">
+  <footer class="relative z-10 border-t border-slate-800 bg-slate-950/90 py-8 px-4 text-center text-xs text-slate-400">
     <div class="max-w-4xl mx-auto space-y-4">
       <div class="flex items-center justify-center gap-2 text-white font-heading font-extrabold text-base">
         <span>🛍️ DEALS<span class="text-amber-400">HUB</span> INDIA</span>
       </div>
 
-      <p class="max-w-xl mx-auto text-[11px] text-slate-400 leading-relaxed">
+      <p class="max-w-xl mx-auto text-[11px] text-slate-300 leading-relaxed">
         <b>Affiliate Disclosure:</b> DealsHub India is a consumer deals curation platform. We participate in various affiliate marketing programs (including Amazon Associates, Flipkart, and EarnKaro). This means we may earn a small referral commission when you purchase through our links, at zero additional cost to you.
       </p>
 
-      <div class="flex items-center justify-center gap-6 text-[11px] text-slate-400 pt-2">
+      <div class="flex items-center justify-center gap-6 text-[11px] text-amber-300/80 pt-2">
         <a href="#channels" class="hover:text-amber-400 transition">All Channels</a>
         <a href="https://t.me/wristhubchasi" target="_blank" rel="noopener noreferrer" class="hover:text-amber-400 transition">WristHub Telegram</a>
         <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" rel="noopener noreferrer" class="hover:text-amber-400 transition">WristHub WhatsApp</a>
       </div>
 
-      <p class="text-[10px] text-slate-600 pt-3">
+      <p class="text-[10px] text-slate-500 pt-3">
         © 2026 DealsHub India. Designed for high-speed festive shopping on GitHub Pages.
       </p>
     </div>
@@ -564,10 +562,10 @@
       buttons.forEach(btn => {
         if (btn.getAttribute('data-category') === category) {
           btn.classList.add('active', 'bg-amber-500', 'text-slate-950', 'font-bold');
-          btn.classList.remove('bg-slate-900/90', 'text-slate-300');
+          btn.classList.remove('bg-slate-950/80', 'text-slate-200');
         } else {
           btn.classList.remove('active', 'bg-amber-500', 'text-slate-950', 'font-bold');
-          btn.classList.add('bg-slate-900/90', 'text-slate-300');
+          btn.classList.add('bg-slate-950/80', 'text-slate-200');
         }
       });
 
