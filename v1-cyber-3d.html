@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealsHub India 🛍️ | 3D Cyber-Festive Loot Engine</title>
+
+  <!-- Google Fonts: Outfit + Plus Jakarta Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            heading: ['Outfit', 'sans-serif'],
+            body: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            cyberDark: '#030712',
+            cyberCard: '#0b1120',
+            neonGold: '#f59e0b',
+            neonCyan: '#06b6d4',
+            neonPurple: '#a855f7',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js for 3D Festive Background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Vanilla Tilt -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #030712;
+      color: #f8fafc;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Background 3D Canvas */
+    #threejs-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.7;
+    }
+
+    /* Cyber Grid */
+    .cyber-grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(245, 158, 11, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(245, 158, 11, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* 3D Glassmorphism Cards */
+    .cyber-card {
+      background: rgba(11, 17, 32, 0.75);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.08);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      transform-style: preserve-3d;
+    }
+    .cyber-card:hover {
+      border-color: rgba(245, 158, 11, 0.6);
+      box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.9), 0 0 45px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Animated Ticker */
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: 200%;
+      animation: marquee 22s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* Neon Pulse Glow */
+    .neon-pulse {
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+      animation: neonGlow 2s infinite alternate ease-in-out;
+    }
+    @keyframes neonGlow {
+      0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+      100% { box-shadow: 0 0 35px rgba(245, 158, 11, 0.8); }
+    }
+
+    /* Version Switcher Pill */
+    .switcher-pill {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1.5px solid rgba(245, 158, 11, 0.5);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 25px rgba(245, 158, 11, 0.3);
+      backdrop-filter: blur(24px);
+      padding: 8px 16px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body class="relative selection:bg-amber-500 selection:text-black">
+
+  <!-- 3D Three.js Particle Lights Canvas -->
+  <canvas id="threejs-canvas"></canvas>
+  <div class="cyber-grid-overlay"></div>
+
+  <!-- FLOATING MASTER VERSION SWITCHER -->
+  <aside class="switcher-pill">
+    <span class="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 pr-2 border-r border-slate-700">
+      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> SHOWCASE:
+    </span>
+    <a href="original.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">Original</a>
+    <a href="v1-cyber-3d.html" class="text-xs px-3 py-1.5 rounded-full bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30">1. 3D Cyber</a>
+    <a href="v2-apple-glass.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">2. Apple Glass</a>
+    <a href="v3-gamified-arcade.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">3. Gamified</a>
+    <a href="v4-spatial-bento.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">4. Bento Grid</a>
+  </aside>
+
+  <!-- TOP FESTIVE TICKER -->
+  <header class="sticky top-0 z-50 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 py-2.5 px-4 shadow-xl font-bold text-xs tracking-wide border-b border-amber-300/40">
+    <div class="animate-marquee whitespace-nowrap flex items-center gap-8">
+      <span class="flex items-center gap-2">🚀 <b>BIG BILLION DAYS & FESTIVAL 2026:</b> 100% Free Instant Alert Bots on Telegram & WhatsApp</span>
+      <span class="flex items-center gap-2">🔥 <b>60% TO 90% OFF:</b> Titan, Fossil Watches, Streetwear Jeans, Kurtis & Luxury Fragrances</span>
+      <span class="flex items-center gap-2">⚡ <b>EXCLUSIVE EARLY ACCESS:</b> Grab deals before they go Out of Stock!</span>
+      <span class="flex items-center gap-2">🚀 <b>BIG BILLION DAYS & FESTIVAL 2026:</b> 100% Free Instant Alert Bots on Telegram & WhatsApp</span>
+      <span class="flex items-center gap-2">🔥 <b>60% TO 90% OFF:</b> Titan, Fossil Watches, Streetwear Jeans, Kurtis & Luxury Fragrances</span>
+    </div>
+  </header>
+
+  <!-- NAVBAR -->
+  <nav class="relative z-20 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/40 text-black text-2xl font-black neon-pulse">
+          🛍️
+        </div>
+        <div>
+          <span class="text-2xl font-heading font-black tracking-tight text-white flex items-center gap-2">
+            DEALS<span class="text-amber-400">HUB</span>
+            <span class="text-[10px] uppercase font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/50 px-2 py-0.5 rounded-full">3D ENGINE</span>
+          </span>
+          <p class="text-[11px] text-amber-200/80 font-medium">India's #1 Real-Time Festive Loot Network</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="#channels" class="text-xs font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 shadow-lg shadow-amber-500/30 transition flex items-center gap-2 active:scale-95 font-heading">
+          <i data-lucide="bell-ring" class="w-4 h-4"></i> Get Free Alerts
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="relative z-10 max-w-6xl mx-auto px-4 pt-10 pb-36">
+
+    <!-- 1. 3D HERO SPOTLIGHT SECTION -->
+    <section class="mb-20" id="hero-section">
+      <div class="cyber-card rounded-3xl p-8 sm:p-12 relative overflow-hidden border-2 border-amber-500/40" data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.2">
+        
+        <!-- Ambient Glow behind banner -->
+        <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/20 filter blur-[100px] rounded-full pointer-events-none"></div>
+
+        <div class="relative z-10 text-center max-w-3xl mx-auto">
+          
+          <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-900/90 border border-amber-400/50 text-amber-300 text-xs font-mono font-bold shadow-lg mb-6">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>LIVE FESTIVAL LOOT RADAR · 2026 EDITION</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl md:text-6xl font-heading font-black tracking-tight text-white mb-4 leading-tight">
+            BIG BILLION DAYS <br/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200 drop-shadow-lg">
+              FLAT 60% TO 90% OFF
+            </span> 🛍️
+          </h1>
+
+          <p class="text-slate-300 text-sm sm:text-lg mb-8 leading-relaxed">
+            Don't pay full price during Great Indian Festival & Big Billion Days. Hamare dedicated Telegram & WhatsApp bots se payein verified brand loots instant price-drop ke sath.
+          </p>
+
+          <!-- 3D Countdown Box -->
+          <div class="bg-slate-950/80 border border-amber-500/40 rounded-2xl p-6 shadow-2xl backdrop-blur-xl mb-8">
+            <div class="flex items-center justify-center gap-2 text-xs font-mono uppercase tracking-widest text-amber-400 font-bold mb-4">
+              <i data-lucide="clock" class="w-4 h-4"></i> OFFICIAL SALE COMMENCES IN
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 text-center max-w-md mx-auto">
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-inner">
+                <span id="days" class="text-3xl sm:text-4xl font-heading font-black text-white block">14</span>
+                <span class="text-[10px] uppercase font-mono font-bold text-slate-400">Days</span>
+              </div>
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-inner">
+                <span id="hours" class="text-3xl sm:text-4xl font-heading font-black text-amber-400 block">07</span>
+                <span class="text-[10px] uppercase font-mono font-bold text-slate-400">Hours</span>
+              </div>
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-inner">
+                <span id="minutes" class="text-3xl sm:text-4xl font-heading font-black text-white block">38</span>
+                <span class="text-[10px] uppercase font-mono font-bold text-slate-400">Mins</span>
+              </div>
+              <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-inner">
+                <span id="seconds" class="text-3xl sm:text-4xl font-heading font-black text-amber-400 block">19</span>
+                <span class="text-[10px] uppercase font-mono font-bold text-slate-400">Secs</span>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-center gap-4 text-xs text-slate-300">
+              <span class="flex items-center gap-1.5 font-medium"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i> 100% Brand Verified</span>
+              <span class="flex items-center gap-1.5 font-medium"><i data-lucide="users" class="w-4 h-4 text-amber-400"></i> 25,000+ Smart Shoppers</span>
+            </div>
+          </div>
+
+          <!-- Fast CTA Buttons -->
+          <div class="flex items-center justify-center gap-4 flex-wrap">
+            <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="px-8 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-black text-sm shadow-xl shadow-emerald-600/30 transition flex items-center gap-2 active:scale-95">
+              <i data-lucide="message-circle" class="w-5 h-5"></i> Join Official WhatsApp Channel
+            </a>
+            <a href="https://t.me/wristhubchasi" target="_blank" class="px-8 py-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-heading font-black text-sm shadow-xl shadow-sky-600/30 transition flex items-center gap-2 active:scale-95">
+              <i data-lucide="send" class="w-5 h-5"></i> Join Telegram Loot Channel
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. INTERACTIVE CATEGORY RADAR -->
+    <section class="mb-14" id="channels">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-heading font-black text-white">Curated Specialized Channels 📢</h2>
+        <p class="text-sm text-slate-400 mt-2">Pick your category and join with 1-click for curated, zero-spam festive alerts</p>
+
+        <!-- Category Filters -->
+        <div class="flex items-center justify-center gap-2.5 flex-wrap mt-6">
+          <button onclick="filterCat('all')" class="cat-pill active px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs shadow-lg transition" data-cat="all">
+            ⭐ All Categories
+          </button>
+          <button onclick="filterCat('watches')" class="cat-pill px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:border-amber-400 font-bold text-xs transition" data-cat="watches">
+            ⌚ Watches (WristHub)
+          </button>
+          <button onclick="filterCat('boys')" class="cat-pill px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:border-amber-400 font-bold text-xs transition" data-cat="boys">
+            👔 Boys Streetwear & Gym
+          </button>
+          <button onclick="filterCat('girls')" class="cat-pill px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:border-amber-400 font-bold text-xs transition" data-cat="girls">
+            👗 Girls Fashion & Kurtis
+          </button>
+          <button onclick="filterCat('beauty')" class="cat-pill px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 hover:border-amber-400 font-bold text-xs transition" data-cat="beauty">
+            💄 Beauty & Skincare
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 VISUAL 3D TILT CHANNEL CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="cardsGrid">
+
+        <!-- CARD 1: WRISTHUB -->
+        <div class="cyber-card rounded-3xl overflow-hidden flex flex-col justify-between" data-category="watches" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div>
+            <div class="relative h-56 overflow-hidden">
+              <img src="assets/watches-banner.jpg" alt="WristHub Watches" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              <div class="absolute top-4 left-4">
+                <span class="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-black text-xs shadow-lg">
+                  🔥 FLAT 50%–75% OFF
+                </span>
+              </div>
+              <div class="absolute bottom-4 left-5 right-5">
+                <h3 class="text-2xl font-heading font-black text-white drop-shadow-md">WristHub | Watches & Smartwatches</h3>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <p class="text-xs font-mono font-bold text-amber-400 mb-2">Titan · Noise · boAt · Casio · Fossil</p>
+              <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                Calling smartwatches from ₹999, classic workwear analog watches, festive couple gift sets, aur luxury chronographs official brand warranty ke sath.
+              </p>
+
+              <!-- Live Drop -->
+              <div class="bg-slate-950/90 rounded-2xl p-4 border border-slate-800 flex items-center justify-between text-xs mb-2">
+                <span class="text-slate-300 flex items-center gap-2 truncate">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
+                  <b>Latest Drop:</b> Titan Neo Chronograph @ ₹1,999 (MRP ₹3,999)
+                </span>
+                <span class="text-amber-400 font-bold ml-2 font-mono shrink-0">50% OFF</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0 grid grid-cols-2 gap-3">
+            <a href="https://t.me/wristhubchasi" target="_blank" class="py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 transition">
+              <i data-lucide="send" class="w-4 h-4"></i> Telegram
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition">
+              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD 2: BOYS STREETWEAR -->
+        <div class="cyber-card rounded-3xl overflow-hidden flex flex-col justify-between" data-category="boys" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div>
+            <div class="relative h-56 overflow-hidden">
+              <img src="assets/boys-banner.jpg" alt="Boys Streetwear" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              <div class="absolute top-4 left-4">
+                <span class="px-3 py-1.5 rounded-xl bg-blue-500 text-white font-black text-xs shadow-lg">
+                  ⚡ 60%–90% OFF
+                </span>
+              </div>
+              <div class="absolute bottom-4 left-5 right-5">
+                <h3 class="text-2xl font-heading font-black text-white drop-shadow-md">Boys Fashion, Streetwear & Gym</h3>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <p class="text-xs font-mono font-bold text-blue-400 mb-2">Red Tape · Puma · HRX · Bewakoof · AJIO</p>
+              <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                AJIO ₹99 T-Shirts, Red Tape sneakers from ₹899, branded slim-fit denim, oversized hoodies aur gym activewear ke fastest alerts.
+              </p>
+
+              <!-- Live Drop -->
+              <div class="bg-slate-950/90 rounded-2xl p-4 border border-slate-800 flex items-center justify-between text-xs mb-2">
+                <span class="text-slate-300 flex items-center gap-2 truncate">
+                  <span class="w-2.5 h-2.5 rounded-full bg-blue-400 shrink-0 animate-pulse"></span>
+                  <b>Latest Drop:</b> Red Tape Retro Sneakers @ ₹1,199 (MRP ₹4,999)
+                </span>
+                <span class="text-blue-400 font-bold ml-2 font-mono shrink-0">76% OFF</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0 grid grid-cols-2 gap-3">
+            <a href="https://t.me/wristhubchasi" target="_blank" class="py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 transition">
+              <i data-lucide="send" class="w-4 h-4"></i> Telegram
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition">
+              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD 3: GIRLS FASHION -->
+        <div class="cyber-card rounded-3xl overflow-hidden flex flex-col justify-between" data-category="girls" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div>
+            <div class="relative h-56 overflow-hidden">
+              <img src="assets/girls-banner.jpg" alt="Girls Fashion" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              <div class="absolute top-4 left-4">
+                <span class="px-3 py-1.5 rounded-xl bg-pink-500 text-white font-black text-xs shadow-lg">
+                  🌸 FESTIVE UNDER ₹499
+                </span>
+              </div>
+              <div class="absolute bottom-4 left-5 right-5">
+                <h3 class="text-2xl font-heading font-black text-white drop-shadow-md">Girls Fashion, Kurtis & Lifestyle</h3>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <p class="text-xs font-mono font-bold text-pink-400 mb-2">Libas · Biba · AVAASA · Clovia · Zivame</p>
+              <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                Festive Kurta-Pant sets with Dupatta under ₹699, cozy nightwear, high-waist active leggings aur trending ethnic wear with hassle-free returns.
+              </p>
+
+              <!-- Live Drop -->
+              <div class="bg-slate-950/90 rounded-2xl p-4 border border-slate-800 flex items-center justify-between text-xs mb-2">
+                <span class="text-slate-300 flex items-center gap-2 truncate">
+                  <span class="w-2.5 h-2.5 rounded-full bg-pink-400 shrink-0 animate-pulse"></span>
+                  <b>Latest Drop:</b> Libas Pure Cotton Anarkali @ ₹649 (MRP ₹2,799)
+                </span>
+                <span class="text-pink-400 font-bold ml-2 font-mono shrink-0">77% OFF</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0 grid grid-cols-2 gap-3">
+            <a href="https://t.me/wristhubchasi" target="_blank" class="py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 transition">
+              <i data-lucide="send" class="w-4 h-4"></i> Telegram
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition">
+              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- CARD 4: BEAUTY & SKINCARE -->
+        <div class="cyber-card rounded-3xl overflow-hidden flex flex-col justify-between" data-category="beauty" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.15">
+          <div>
+            <div class="relative h-56 overflow-hidden">
+              <img src="assets/beauty-banner.jpg" alt="Beauty Skincare" class="w-full h-full object-cover transform hover:scale-105 transition duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+              <div class="absolute top-4 left-4">
+                <span class="px-3 py-1.5 rounded-xl bg-purple-500 text-white font-black text-xs shadow-lg">
+                  💄 BOGO & K-BEAUTY
+                </span>
+              </div>
+              <div class="absolute bottom-4 left-5 right-5">
+                <h3 class="text-2xl font-heading font-black text-white drop-shadow-md">GlowHub | Beauty & Skincare</h3>
+              </div>
+            </div>
+
+            <div class="p-6">
+              <p class="text-xs font-mono font-bold text-purple-400 mb-2">Minimalist · Dot & Key · COSRX · Maybelline</p>
+              <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                Viral Vitamin C serums, lightweight matte sunscreens, COSRX Snail Mucin, transferproof matte lipsticks aur Buy 1 Get 1 Free festive combos.
+              </p>
+
+              <!-- Live Drop -->
+              <div class="bg-slate-950/90 rounded-2xl p-4 border border-slate-800 flex items-center justify-between text-xs mb-2">
+                <span class="text-slate-300 flex items-center gap-2 truncate">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0 animate-pulse"></span>
+                  <b>Latest Drop:</b> Dot & Key Sunscreen (Pack of 2 BOGO) @ ₹499
+                </span>
+                <span class="text-purple-400 font-bold ml-2 font-mono shrink-0">BOGO FREE</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6 pt-0 grid grid-cols-2 gap-3">
+            <a href="https://t.me/wristhubchasi" target="_blank" class="py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 transition">
+              <i data-lucide="send" class="w-4 h-4"></i> Telegram
+            </a>
+            <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition">
+              <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. DIRECT STOREFRONT CASHBACK PORTALS -->
+    <section class="mb-20">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-heading font-black text-white">Direct Festive Storefronts 🛍️</h2>
+        <p class="text-xs text-slate-400 mt-1">Directly shop on major e-commerce platforms with verified bank card cashback</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <a href="https://amazon.in" target="_blank" class="cyber-card rounded-2xl p-6 text-center group flex flex-col items-center justify-center" data-tilt data-tilt-max="8">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition">
+            📦
+          </div>
+          <span class="font-heading font-bold text-base text-white block">Amazon GIF</span>
+          <span class="text-xs text-amber-400 font-mono font-bold mt-1">Up to 80% Off</span>
+        </a>
+
+        <a href="https://flipkart.com" target="_blank" class="cyber-card rounded-2xl p-6 text-center group flex flex-col items-center justify-center" data-tilt data-tilt-max="8">
+          <div class="w-14 h-14 rounded-2xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition">
+            🛒
+          </div>
+          <span class="font-heading font-bold text-base text-white block">Flipkart BBD</span>
+          <span class="text-xs text-blue-400 font-mono font-bold mt-1">Extra 10% Bank Off</span>
+        </a>
+
+        <a href="https://myntra.com" target="_blank" class="cyber-card rounded-2xl p-6 text-center group flex flex-col items-center justify-center" data-tilt data-tilt-max="8">
+          <div class="w-14 h-14 rounded-2xl bg-pink-500/20 border border-pink-500/30 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition">
+            👠
+          </div>
+          <span class="font-heading font-bold text-base text-white block">Myntra BFF</span>
+          <span class="text-xs text-pink-400 font-mono font-bold mt-1">50%–90% Off</span>
+        </a>
+
+        <a href="https://ajio.com" target="_blank" class="cyber-card rounded-2xl p-6 text-center group flex flex-col items-center justify-center" data-tilt data-tilt-max="8">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-3xl mb-3 group-hover:scale-110 transition">
+            🛍️
+          </div>
+          <span class="font-heading font-bold text-base text-white block">AJIO All Stars</span>
+          <span class="text-xs text-emerald-400 font-mono font-bold mt-1">Flat ₹99 Deals</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- THREE.JS 3D PARTICLE AMBIENT LIGHTS SCRIPT -->
+  <script>
+    lucide.createIcons();
+
+    // 1. Three.js Background Particle Setup
+    const canvas = document.getElementById('threejs-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Particle Geometry
+    const particleCount = 200;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * 40;
+      positions[i + 1] = (Math.random() - 0.5) * 40;
+      positions[i + 2] = (Math.random() - 0.5) * 40;
+
+      // Golden & amber festive colors
+      colors[i] = 0.96 + Math.random() * 0.04;     // R
+      colors[i + 1] = 0.62 + Math.random() * 0.2; // G
+      colors[i + 2] = 0.05 + Math.random() * 0.2; // B
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 0.35,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    // 3D Geometric Floating Rings
+    const ringGeo = new THREE.TorusGeometry(8, 0.08, 16, 100);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, wireframe: true, transparent: true, opacity: 0.2 });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = Math.PI / 3;
+    scene.add(ring);
+
+    camera.position.z = 20;
+
+    // Mouse interactive movement
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      particles.rotation.y += 0.0015;
+      particles.rotation.x += 0.0008;
+      ring.rotation.z += 0.002;
+      ring.rotation.y += 0.001;
+
+      camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY * 2 - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // 2. Countdown Timer
+    const targetDate = new Date('2026-09-23T00:00:00+05:30').getTime();
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+      if (diff > 0) {
+        document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+        document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+        document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+        document.getElementById('seconds').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+      }
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // 3. Category Filter
+    function filterCat(cat) {
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.classList.add('bg-amber-500', 'text-slate-950');
+          btn.classList.remove('bg-slate-900', 'text-slate-200');
+        } else {
+          btn.classList.remove('bg-amber-500', 'text-slate-950');
+          btn.classList.add('bg-slate-900', 'text-slate-200');
+        }
+      });
+
+      document.querySelectorAll('#cardsGrid > div').forEach(card => {
+        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+          gsap.to(card, { opacity: 1, scale: 1, duration: 0.4, display: 'flex' });
+        } else {
+          gsap.to(card, { opacity: 0, scale: 0.95, duration: 0.3, display: 'none' });
+        }
+      });
+    }
+
+    // GSAP ScrollTrigger Entrance
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.from("#hero-section", {
+      opacity: 0,
+      y: 40,
+      duration: 1,
+      ease: "power3.out"
+    });
+    gsap.from("#cardsGrid > div", {
+      scrollTrigger: {
+        trigger: "#cardsGrid",
+        start: "top 80%"
+      },
+      opacity: 0,
+      y: 50,
+      stagger: 0.15,
+      duration: 0.8,
+      ease: "power2.out"
+    });
+  </script>
+</body>
+</html>

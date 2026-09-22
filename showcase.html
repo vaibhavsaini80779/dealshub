@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealsHub India 🛍️ | Master Design Showcase Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
+  </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden bg-[#070b16]">
+
+  <!-- TOP HEADER & CONTROLS -->
+  <header class="bg-slate-950/90 border-b border-slate-800/80 px-4 py-2.5 flex items-center justify-between z-30 shrink-0">
+    <!-- Brand Title -->
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 via-orange-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/25 text-black font-black text-lg">
+        🛍️
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-heading font-extrabold text-base tracking-tight text-white">DEALS<span class="text-amber-400">HUB</span> SHOWCASE</span>
+          <span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.2 rounded-full uppercase">LIVE PREVIEW</span>
+        </div>
+        <p class="text-[11px] text-slate-400">Compare 5 unique designs with real-time switching</p>
+      </div>
+    </div>
+
+    <!-- Variation Switcher Tabs -->
+    <div class="flex items-center gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+      <button onclick="switchPreview('original.html', this)" class="tab-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1.5">
+        <span>🎆 Upgraded Original</span>
+      </button>
+      <button onclick="switchPreview('v1-cyber-3d.html', this)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
+        <span>✨ 1. 3D Cyber</span>
+      </button>
+      <button onclick="switchPreview('v2-apple-glass.html', this)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
+        <span>🍏 2. Apple Glass</span>
+      </button>
+      <button onclick="switchPreview('v3-gamified-arcade.html', this)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
+        <span>🎰 3. Gamified</span>
+      </button>
+      <button onclick="switchPreview('v4-spatial-bento.html', this)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
+        <span>📐 4. Bento Grid</span>
+      </button>
+      <button onclick="switchPreview('original.backup.html', this)" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5 border-l border-slate-800 pl-2">
+        <span>🏛️ Old Baseline</span>
+      </button>
+    </div>
+
+    <!-- Responsive Viewport & Direct Link -->
+    <div class="flex items-center gap-2">
+      <div class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-800 text-slate-400 text-xs">
+        <button onclick="setDevice('100%', this)" class="dev-btn active px-2.5 py-1 rounded bg-slate-800 text-amber-400 font-bold flex items-center gap-1" title="Desktop View">
+          <i data-lucide="monitor" class="w-3.5 h-3.5"></i> Full
+        </button>
+        <button onclick="setDevice('768px', this)" class="dev-btn px-2.5 py-1 rounded hover:text-white flex items-center gap-1" title="Tablet View">
+          <i data-lucide="tablet" class="w-3.5 h-3.5"></i> Tablet
+        </button>
+        <button onclick="setDevice('414px', this)" class="dev-btn px-2.5 py-1 rounded hover:text-white flex items-center gap-1" title="Mobile View">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5"></i> Mobile
+        </button>
+      </div>
+      <a id="directLink" href="original.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1.5">
+        <span>Open Tab</span>
+        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- LIVE EMBEDDED PREVIEW FRAME -->
+  <main class="flex-1 w-full flex items-center justify-center p-2 sm:p-3 overflow-hidden bg-slate-950/60">
+    <div id="deviceWrapper" class="h-full w-full max-w-full rounded-2xl overflow-hidden shadow-2xl border border-slate-800/80 transition-all duration-300 bg-slate-900">
+      <iframe id="previewFrame" src="original.html" class="w-full h-full border-0"></iframe>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    const frame = document.getElementById('previewFrame');
+    const wrapper = document.getElementById('deviceWrapper');
+    const directLink = document.getElementById('directLink');
+
+    function switchPreview(url, btn) {
+      frame.src = url;
+      directLink.href = url;
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active', 'bg-amber-500', 'text-slate-950', 'font-bold');
+        b.classList.add('text-slate-300', 'font-medium');
+      });
+      btn.classList.add('active', 'bg-amber-500', 'text-slate-950', 'font-bold');
+      btn.classList.remove('text-slate-300', 'font-medium');
+    }
+
+    function setDevice(width, btn) {
+      wrapper.style.maxWidth = width;
+      document.querySelectorAll('.dev-btn').forEach(b => {
+        b.classList.remove('active', 'bg-slate-800', 'text-amber-400', 'font-bold');
+      });
+      btn.classList.add('active', 'bg-slate-800', 'text-amber-400', 'font-bold');
+    }
+  </script>
+</body>
+</html>

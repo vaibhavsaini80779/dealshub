@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DealsHub India 🛍️ | Gamified Loot Arcade 2026</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@600;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            arcade: ['Bungee', 'cursive'],
+            heading: ['Outfit', 'sans-serif'],
+            body: ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b0720;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* Arcade Glow */
+    .arcade-card {
+      background: rgba(23, 15, 48, 0.85);
+      border: 2px solid rgba(250, 204, 21, 0.4);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(234, 88, 12, 0.2);
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .arcade-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(250, 204, 21, 0.4);
+    }
+
+    /* Spinning Wheel */
+    #wheel-canvas {
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.5);
+      border-radius: 50%;
+    }
+
+    /* Toast Notification */
+    #live-toast {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      z-index: 999;
+      transform: translateY(150%);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Version Switcher Pill */
+    .switcher-pill {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1.5px solid rgba(245, 158, 11, 0.5);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 25px rgba(245, 158, 11, 0.3);
+      backdrop-filter: blur(24px);
+      padding: 8px 16px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body class="relative selection:bg-yellow-400 selection:text-black">
+
+  <!-- FLOATING MASTER VERSION SWITCHER -->
+  <aside class="switcher-pill">
+    <span class="text-xs font-mono font-bold text-amber-400 flex items-center gap-1.5 pr-2 border-r border-slate-700">
+      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> SHOWCASE:
+    </span>
+    <a href="original.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">Original</a>
+    <a href="v1-cyber-3d.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">1. 3D Cyber</a>
+    <a href="v2-apple-glass.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">2. Apple Glass</a>
+    <a href="v3-gamified-arcade.html" class="text-xs px-3 py-1.5 rounded-full bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30">3. Gamified</a>
+    <a href="v4-spatial-bento.html" class="text-xs px-3 py-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition font-medium">4. Bento Grid</a>
+  </aside>
+
+  <!-- LIVE SOCIAL PROOF TOAST -->
+  <div id="live-toast" class="bg-slate-900/95 border-2 border-amber-400 rounded-2xl p-4 shadow-2xl backdrop-blur-xl flex items-center gap-3 max-w-sm">
+    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-xl font-bold">
+      🎉
+    </div>
+    <div>
+      <p class="text-xs font-bold text-white" id="toast-title">Rahul from Delhi just joined!</p>
+      <p class="text-[11px] text-amber-400" id="toast-sub">Claimed Titan Neo 50% Off Coupon</p>
+    </div>
+  </div>
+
+  <!-- TOP ARCADE TICKER -->
+  <div class="bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 text-slate-950 font-extrabold text-xs py-2 px-4 shadow-xl text-center">
+    🎰 <b>FESTIVE LOOT ARCADE:</b> Spin the Lucky Wheel below to unlock secret 90% OFF Early Access Links!
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="text-3xl">🎰</span>
+      <div>
+        <span class="text-2xl font-arcade tracking-wider text-yellow-400 drop-shadow">DEALSHUB</span>
+        <span class="text-xs bg-pink-600 text-white font-bold px-2 py-0.5 rounded-md ml-1">ARCADE</span>
+      </div>
+    </div>
+    <a href="#wheel-section" class="px-5 py-2.5 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-black font-extrabold text-xs shadow-lg transition active:scale-95">
+      🎯 Spin & Win Loot
+    </a>
+  </nav>
+
+  <!-- 1. GAMIFIED HERO -->
+  <section class="max-w-6xl mx-auto px-6 pt-8 pb-16 text-center">
+    <div class="inline-block px-4 py-1.5 rounded-full bg-pink-600/30 border border-pink-500 text-pink-300 text-xs font-bold uppercase tracking-wider mb-6">
+      💥 100% Guaranteed Festive Coupon Drop
+    </div>
+
+    <h1 class="text-4xl sm:text-6xl font-heading font-black tracking-tight text-white mb-4 leading-tight">
+      UNLOCK <span class="text-yellow-400 underline decoration-wavy decoration-orange-500">SECRET 90% LOOT</span> <br/>
+      BEFORE THE SALE OPENS! 🛍️
+    </h1>
+    <p class="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto mb-10">
+      Join 25,000+ smart shoppers in India getting verified bot alerts on WhatsApp & Telegram with zero spam.
+    </p>
+
+    <!-- INTERACTIVE LUCKY WHEEL ARCADE BOX -->
+    <div class="arcade-card max-w-2xl mx-auto p-8 sm:p-10 mb-16 relative" id="wheel-section">
+      <h2 class="text-2xl font-heading font-black text-yellow-400 mb-2">Festive Lucky Wheel 🎡</h2>
+      <p class="text-xs text-slate-300 mb-6">Click SPIN to unlock your instant verified discount channel!</p>
+
+      <div class="relative w-[320px] h-[320px] sm:w-[380px] sm:h-[380px] mx-auto mb-6 flex items-center justify-center">
+        <!-- Pointer Arrow -->
+        <div class="absolute -top-3 z-30 text-yellow-400 text-3xl filter drop-shadow-md">
+          ▼
+        </div>
+        <canvas id="wheel-canvas" width="380" height="380" class="w-full h-full"></canvas>
+        <button id="spin-btn" onclick="spinWheel()" class="absolute z-20 w-20 h-20 rounded-full bg-gradient-to-tr from-yellow-400 to-orange-500 text-black font-arcade text-sm font-black border-4 border-white shadow-2xl hover:scale-105 active:scale-95 transition">
+          SPIN!
+        </button>
+      </div>
+
+      <!-- Result Modal Banner -->
+      <div id="wheel-result" class="hidden bg-slate-950/95 border-2 border-yellow-400 rounded-2xl p-6 text-center shadow-2xl">
+        <span class="text-3xl block mb-2">🎉</span>
+        <h3 class="text-xl font-heading font-black text-white mb-1" id="prize-title">You Won: Flat 90% Kurti Loot!</h3>
+        <p class="text-xs text-amber-300 mb-4">Your VIP access link has been unlocked. Click below to claim on WhatsApp or Telegram!</p>
+        <div class="flex gap-3 justify-center">
+          <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg flex items-center gap-2">
+            <i data-lucide="message-circle" class="w-4 h-4"></i> Claim on WhatsApp
+          </a>
+          <a href="https://t.me/wristhubchasi" target="_blank" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-lg flex items-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> Claim on Telegram
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. INTERACTIVE SCRATCH CARD REVEAL -->
+    <div class="arcade-card max-w-xl mx-auto p-8 mb-20 text-center">
+      <h3 class="text-xl font-heading font-black text-white mb-1">🎁 VIP Secret Coupon Scratch Card</h3>
+      <p class="text-xs text-slate-300 mb-6">Drag your finger or cursor across the golden box to scratch!</p>
+
+      <div class="relative w-[320px] h-[140px] mx-auto rounded-2xl overflow-hidden border-2 border-yellow-400/50 shadow-2xl bg-gradient-to-r from-purple-900 to-indigo-900 flex flex-col items-center justify-center">
+        <!-- Secret Underneath -->
+        <div class="text-center">
+          <span class="text-xs font-mono uppercase text-yellow-400 font-bold block">SECRET VIP CODE</span>
+          <span class="text-3xl font-arcade text-white tracking-widest block mt-1">FESTIVE90</span>
+          <span class="text-[11px] text-emerald-400 font-bold">100% Brand Cashback Activated!</span>
+        </div>
+
+        <!-- Scratch Canvas Overlay -->
+        <canvas id="scratch-canvas" width="320" height="140" class="absolute inset-0 z-10 cursor-pointer"></canvas>
+      </div>
+    </div>
+
+    <!-- 3. CHANNEL VAULT CARDS WITH URGENCY METERS -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-heading font-black text-white">Loot Vault Channels 🛍️</h2>
+      <p class="text-xs text-slate-400 mt-1">Real-time capacity and live alert links</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto text-left">
+      
+      <!-- Card 1 -->
+      <div class="arcade-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-2xl">⌚</span>
+            <span class="text-xs font-bold bg-yellow-400 text-black px-3 py-1 rounded-full">50%–75% OFF</span>
+          </div>
+          <h3 class="text-xl font-heading font-black text-white mb-2">WristHub | Watches & Smartwatches</h3>
+          <p class="text-xs text-slate-300 mb-4 leading-relaxed">Titan, Casio, Noise, boAt and luxury chronographs with verified brand warranty.</p>
+
+          <!-- Urgency Meter -->
+          <div class="mb-4">
+            <div class="flex justify-between text-[11px] text-slate-300 mb-1">
+              <span>Channel Capacity</span>
+              <span class="text-yellow-400 font-bold">92% Claimed</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full w-[92%]"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center">WhatsApp</a>
+          <a href="https://t.me/wristhubchasi" target="_blank" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs text-center">Telegram</a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="arcade-card p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-2xl">👔</span>
+            <span class="text-xs font-bold bg-blue-500 text-white px-3 py-1 rounded-full">60%–90% OFF</span>
+          </div>
+          <h3 class="text-xl font-heading font-black text-white mb-2">Boys Fashion & Gym Streetwear</h3>
+          <p class="text-xs text-slate-300 mb-4 leading-relaxed">Red Tape sneakers from ₹899, AJIO ₹99 drops, hoodies & activewear.</p>
+
+          <!-- Urgency Meter -->
+          <div class="mb-4">
+            <div class="flex justify-between text-[11px] text-slate-300 mb-1">
+              <span>Channel Capacity</span>
+              <span class="text-blue-400 font-bold">88% Claimed</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full w-[88%]"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <a href="https://whatsapp.com/channel/0029Vb8LscABFLgZDQa3Fm3o" target="_blank" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center">WhatsApp</a>
+          <a href="https://t.me/wristhubchasi" target="_blank" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs text-center">Telegram</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WHEEL & SCRATCH SCRIPTS -->
+  <script>
+    lucide.createIcons();
+
+    // 1. Spinning Wheel Implementation
+    const wheelCanvas = document.getElementById('wheel-canvas');
+    const ctx = wheelCanvas.getContext('2d');
+    const segments = [
+      { text: "Flat 90% Kurti", color: "#f59e0b" },
+      { text: "Titan @ ₹1,999", color: "#ef4444" },
+      { text: "Red Tape ₹899", color: "#3b82f6" },
+      { text: "BOGO Skincare", color: "#a855f7" },
+      { text: "Smartwatch ₹999", color: "#10b981" },
+      { text: "Mega Loot ₹99", color: "#ec4899" }
+    ];
+
+    let startAngle = 0;
+    const arc = Math.PI / (segments.length / 2);
+    let spinTimeout = null;
+    let spinAngleStart = 10;
+    let spinTime = 0;
+    let spinTimeTotal = 0;
+
+    function drawWheel() {
+      const outsideRadius = 180;
+      const textRadius = 120;
+      const insideRadius = 50;
+
+      ctx.clearRect(0, 0, 380, 380);
+
+      for (let i = 0; i < segments.length; i++) {
+        const angle = startAngle + i * arc;
+        ctx.fillStyle = segments[i].color;
+
+        ctx.beginPath();
+        ctx.arc(190, 190, outsideRadius, angle, angle + arc, false);
+        ctx.arc(190, 190, insideRadius, angle + arc, angle, true);
+        ctx.stroke();
+        ctx.fill();
+
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.font = "bold 13px 'Plus Jakarta Sans', sans-serif";
+        ctx.translate(190 + Math.cos(angle + arc / 2) * textRadius, 190 + Math.sin(angle + arc / 2) * textRadius);
+        ctx.rotate(angle + arc / 2 + Math.PI / 2);
+        const text = segments[i].text;
+        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+        ctx.restore();
+      }
+    }
+    drawWheel();
+
+    function spinWheel() {
+      spinAngleStart = Math.random() * 10 + 10;
+      spinTime = 0;
+      spinTimeTotal = Math.random() * 3000 + 4000;
+      rotateWheel();
+    }
+
+    function rotateWheel() {
+      spinTime += 30;
+      if (spinTime >= spinTimeTotal) {
+        stopRotateWheel();
+        return;
+      }
+      const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+      startAngle += (spinAngle * Math.PI / 180);
+      drawWheel();
+      spinTimeout = requestAnimationFrame(rotateWheel);
+    }
+
+    function stopRotateWheel() {
+      const degrees = startAngle * 180 / Math.PI + 90;
+      const arcd = arc * 180 / Math.PI;
+      const index = Math.floor((360 - degrees % 360) / arcd) % segments.length;
+      
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+
+      document.getElementById('prize-title').innerText = "You Won: " + segments[index].text + "!";
+      document.getElementById('wheel-result').classList.remove('hidden');
+    }
+
+    function easeOut(t, b, c, d) {
+      const ts = (t /= d) * t;
+      const tc = ts * t;
+      return b + c * (tc + -3 * ts + 3 * t);
+    }
+
+    // 2. Scratch Card Implementation
+    const scratchCanvas = document.getElementById('scratch-canvas');
+    const sCtx = scratchCanvas.getContext('2d');
+    sCtx.fillStyle = '#f59e0b';
+    sCtx.fillRect(0, 0, 320, 140);
+    sCtx.fillStyle = '#78350f';
+    sCtx.font = 'bold 16px sans-serif';
+    sCtx.fillText('★ SCRATCH HERE WITH MOUSE ★', 30, 75);
+
+    let isDrawing = false;
+    function scratch(e) {
+      if (!isDrawing) return;
+      const rect = scratchCanvas.getBoundingClientRect();
+      const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+      const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+      sCtx.globalCompositeOperation = 'destination-out';
+      sCtx.beginPath();
+      sCtx.arc(x, y, 18, 0, Math.PI * 2);
+      sCtx.fill();
+    }
+
+    scratchCanvas.addEventListener('mousedown', () => isDrawing = true);
+    scratchCanvas.addEventListener('mouseup', () => isDrawing = false);
+    scratchCanvas.addEventListener('mousemove', scratch);
+    scratchCanvas.addEventListener('touchstart', () => isDrawing = true);
+    scratchCanvas.addEventListener('touchend', () => isDrawing = false);
+    scratchCanvas.addEventListener('touchmove', scratch);
+
+    // 3. Social Proof Toast Simulation
+    const toasts = [
+      { name: "Pooja from Pune", item: "Claimed Libas Anarkali 77% Off" },
+      { name: "Vikram from Mumbai", item: "Grabbed Red Tape Retro @ ₹1,199" },
+      { name: "Neha from Bangalore", item: "Unlocked Dot & Key BOGO Free Deal" },
+      { name: "Amit from Delhi", item: "Joined WhatsApp Alert Channel" }
+    ];
+    let toastIndex = 0;
+    function showToast() {
+      const t = toasts[toastIndex % toasts.length];
+      document.getElementById('toast-title').innerText = t.name + " just joined!";
+      document.getElementById('toast-sub').innerText = t.item;
+      const toastEl = document.getElementById('live-toast');
+      toastEl.style.transform = "translateY(0%)";
+      setTimeout(() => {
+        toastEl.style.transform = "translateY(150%)";
+      }, 3500);
+      toastIndex++;
+    }
+    setInterval(showToast, 6500);
+    setTimeout(showToast, 1500);
+  </script>
+</body>
+</html>
